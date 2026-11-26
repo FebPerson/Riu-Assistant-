@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riu Companion</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 172px;
+      height: 132px;
+      background: transparent;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .float-stage {
+      width: 172px;
+      height: 132px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 4px 8px 6px;
+    }
+
+    /* ─── Hover / Live Reminder Pill with Audio Wave ─── */
+    .hover-remind {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      background: #16161a;
+      border: 1px solid rgba(237, 237, 240, 0.14);
+      border-radius: 8px;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 160ms cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 160ms cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 20;
+    }
+
+    .float-container:hover .hover-remind,
+    .float-container.is-listening .hover-remind,
+    .float-container.is-processing .hover-remind {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .float-container.is-listening .hover-remind {
+      border-color: rgba(217, 43, 56, 0.55);
+    }
+
+    .audio-wave {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 14px;
+    }
+
+    .wave-bar {
+      width: 2px;
+      height: 12px;
+      border-radius: 1px;
+      background: #d92b38;
+      transform: scaleY(0.25);
+      transform-origin: center;
+      transition: transform 60ms linear;
+    }
+
+    .remind-text {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: #ededf0;
+    }
+
+    /* ─── Mascot Trigger Area ─── */
+    .float-container {
+      width: 84px;
+      height: 98px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      animation: floatIn 280ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .ground-shadow {
+      position: absolute;
+      bottom: 4px;
+      width: 54px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45) 0%, transparent 72%);
+      transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1;
+    }
+
+    .mascot-wrapper {
+      position: relative;
+      width: 78px;
+      height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .mascot-img {
+      width: 74px;
+      height: 88px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ─── Subtle Red Glow Behind Riu (Active on Hover / Listening) ─── */
+    .red-backglow {
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center,
+        rgba(217, 43, 56, 0.52) 0%,
+        rgba(217, 43, 56, 0.18) 50%,
+        transparent 74%
+      );
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ─── Hover & Active Listening States ─── */
+    .float-container:hover .mascot-wrapper,
+    .float-container.is-listening .mascot-wrapper {
+      transform: translateY(-3px);
+    }
+
+    .float-container:hover .ground-shadow,
+    .float-container.is-listening .ground-shadow {
+      transform: scale(0.92);
+      opacity: 0.7;
+    }
+
+    .float-container:hover .red-backglow,
+    .float-container.is-listening .red-backglow {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+
+    .float-container:active .mascot-wrapper {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+  <div class="float-stage">
+    <div class="float-container" id="float-container" title="Hover to speak, Ctrl+L to toggle mic, or click to type">
+      <!-- Hover / Live status pill with real-time audio wave -->
+      <div class="hover-remind" id="hover-remind">
+        <div class="audio-wave" aria-hidden="true">
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+        </div>
+        <span class="remind-text" id="remind-text">Listening…</span>
+      </div>
+
+      <div class="ground-shadow"></div>
+
+      <div class="mascot-wrapper">
+        <div class="red-backglow"></div>
+        <img src="assets/logo.png" class="mascot-img" alt="Riu" draggable="false" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    const container  = document.getElementById('float-container');
+    const remindText = document.getElementById('remind-text');
+    const waveBars   = Array.from(document.querySelectorAll('#hover-remind .wave-bar'));
+
+    let isHovered       = false;
+    let hotkeyActive    = false;
+    let isListening     = false;
+    let isProcessing    = false;
+    let audioStream     = null;
+    let audioCtx        = null;
+    let mediaRecorder   = null;
+    let audioChunks     = [];
+    let rafId           = null;
+    let listenStartedAt = 0;
+    let peakEnergy      = 0;
+    let currentAudioEl  = null;
+
+    function resetWaveBars() {
+      waveBars.forEach(b => { b.style.transform = 'scaleY(0.25)'; });
+    }
+
+    /**
+     * Play natural human voice via Gemini 2.5 Flash Preview TTS,
+     * with Web Speech API fallback only if TTS fails.
+     */
+    async function speakHumanVoice(text) {
+      if (!text) return;
+      try {
+        if (currentAudioEl) {
+          currentAudioEl.pause();
+          currentAudioEl = null;
+        }
+        const tts = await ipcRenderer.invoke('ai:tts', text);
+        if (tts && tts.audioBase64) {
+          const audio = new Audio(`data:${tts.mimeType};base64,${tts.audioBase64}`);
+          currentAudioEl = audio;
+          await audio.play().catch(() => {});
+          return;
+        }
+      } catch (_) {
+        // Fallback if offline / TTS error
+      }
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.rate = 1.02;
+          window.speechSynthesis.speak(u);
+        } catch (_) {}
+      }
+    }
+
+    /**
+     * Acquire microphone access and start real-time waveform + recording.
+     */
+    async function startListening(label = 'Listening…') {
+      if (isListening || isProcessing) return;
+      isListening = true;
+      container.classList.add('is-listening');
+      remindText.textContent = label;
+      peakEnergy = 0;
+
+      try {
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        // If cursor already left while waiting for mic permission, drop immediately
+        if (!isHovered && !hotkeyActive) {
+          releaseMicHardware();
+          return;
+        }
+
+        audioChunks = [];
+        listenStartedAt = Date.now();
+
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioCtx.createMediaStreamSource(audioStream);
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 32;
+        source.connect(analyser);
+        const dataArr = new Uint8Array(analyser.frequencyBinCount);
+
+        function drawWave() {
+          if (!isListening) return;
+          analyser.getByteFrequencyData(dataArr);
+          let sum = 0;
+          waveBars.forEach((bar, i) => {
+            const val = dataArr[i % dataArr.length] || 0;
+            sum += val;
+            const scale = Math.max(0.22, Math.min(1, val / 135));
+            bar.style.transform = `scaleY(${scale.toFixed(2)})`;
+          });
+          const avg = sum / waveBars.length;
+          if (avg > peakEnergy) peakEnergy = avg;
+          rafId = requestAnimationFrame(drawWave);
+        }
+        drawWave();
+
+        mediaRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm' });
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) audioChunks.push(e.data);
+        };
+        mediaRecorder.start();
+      } catch (err) {
+        releaseMicHardware();
+        remindText.textContent = 'Mic unavailable';
+      }
+    }
+
+    /**
+     * Immediately release microphone hardware tracks and AudioContext.
+     */
+    function releaseMicHardware() {
+      isListening = false;
+      container.classList.remove('is-listening');
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      resetWaveBars();
+      if (audioCtx) { audioCtx.close().catch(() => {}); audioCtx = null; }
+      if (audioStream) {
+        audioStream.getTracks().forEach(t => t.stop());
+        audioStream = null;
+      }
+    }
+
+    /**
+     * Stop listening, drop mic access immediately, and process voice if speech occurred.
+     */
+    async function stopListeningAndProcess({ forceSend = false } = {}) {
+      if (!isListening && !mediaRecorder) {
+        releaseMicHardware();
+        return;
+      }
+
+      const durationMs = Date.now() - listenStartedAt;
+      const recorder = mediaRecorder;
+      mediaRecorder = null;
+
+      if (recorder && recorder.state !== 'inactive') {
+        await new Promise((resolve) => {
+          recorder.onstop = resolve;
+          try { recorder.stop(); } catch (_) { resolve(); }
+        });
+      }
+
+      // Drop microphone access immediately!
+      releaseMicHardware();
+
+      const blob = new Blob(audioChunks, { type: 'audio/webm' });
+      audioChunks = [];
+
+      // Ignore brief accidental hover-overs or pure silence
+      const hasSpeech = forceSend || (durationMs > 650 && blob.size > 2500 && peakEnergy > 14);
+      if (!hasSpeech) {
+        remindText.textContent = 'Ask Riu · Live';
+        return;
+      }
+
+      isProcessing = true;
+      container.classList.add('is-processing');
+      remindText.textContent = 'Thinking…';
+
+      try {
+        const buf = await blob.arrayBuffer();
+        const base64 = Buffer.from(buf).toString('base64');
+        const res = await ipcRenderer.invoke('ai:live-stream', {
+          audioBase64: base64,
+          audioMimeType: 'audio/webm',
+        });
+
+        if (res && res.text) {
+          remindText.textContent = res.action ? `Done: ${res.action}` : 'Speaking…';
+          await speakHumanVoice(res.text);
+        }
+      } catch (err) {
+        remindText.textContent = 'Voice error';
+      } finally {
+        isProcessing = false;
+        setTimeout(() => {
+          container.classList.remove('is-processing');
+          remindText.textContent = 'Ask Riu · Live';
+        }, 1600);
+      }
+    }
+
+    // ─── Mouse Hover Auto-Mic ───
+    container.addEventListener('mouseenter', () => {
+      isHovered = true;
+      if (!hotkeyActive && !isListening && !isProcessing) {
+        startListening('Listening…');
+      }
+    });
+
+    container.addEventListener('mouseleave', () => {
+      isHovered = false;
+      if (!hotkeyActive && isListening) {
+        stopListeningAndProcess();
+      }
+    });
+
+    // ─── Global Hotkey Ctrl+L Toggle ───
+    ipcRenderer.on('float-btn:toggle-mic', () => {
+      if (hotkeyActive || isListening) {
+        hotkeyActive = false;
+        stopListeningAndProcess({ forceSend: true });
+      } else {
+        hotkeyActive = true;
+        startListening('Listening (Ctrl+L)…');
+      }
+    });
+
+    // ─── Click to open Command Popup (drop hover mic cleanly first) ───
+    container.addEventListener('click', () => {
+      hotkeyActive = false;
+      releaseMicHardware();
+      mediaRecorder = null;
+      audioChunks = [];
+      ipcRenderer.send('float-btn:clicked');
+    });
+
+    container.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      hotkeyActive = false;
+      releaseMicHardware();
+      ipcRenderer.send('float-btn:open-main');
+    });
+
+    container.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      hotkeyActive = false;
+      releaseMicHardware();
+      ipcRenderer.send('float-btn:open-main');
+    });
+  </script>
+</body>
+</html>

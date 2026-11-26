@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riu Live</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 440px;
+      height: 272px;
+      background: transparent;
+      overflow: hidden;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    svg.icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .popup {
+      width: 440px;
+      height: 272px;
+      background: #16161a;
+      border: 1px solid rgba(237, 237, 240, 0.14);
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 20px;
+      animation: popIn 180ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header row */
+    .popup-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mascot-mini {
+      width: 24px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .header-text { flex: 1; }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #ededf0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      color: #9e9ea7;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #d92b38;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: #9e9ea7;
+    }
+
+    .dashboard-btn {
+      background: #1e1e24;
+      border: 1px solid rgba(237, 237, 240, 0.1);
+      color: #ededf0;
+      font-size: 12px;
+      font-weight: 500;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 140ms cubic-bezier(0.22, 1, 0.36, 1), border-color 140ms cubic-bezier(0.22, 1, 0.36, 1);
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dashboard-btn:hover {
+      background: #25252c;
+      border-color: rgba(237, 237, 240, 0.2);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #6f6f78;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 140ms cubic-bezier(0.22, 1, 0.36, 1), background-color 140ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .close-btn:hover {
+      color: #ededf0;
+      background: #1e1e24;
+    }
+
+    /* Command input */
+    .cmd-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .cmd-input {
+      flex: 1;
+      height: 36px;
+      background: #0b0b0d;
+      border: 1px solid rgba(237, 237, 240, 0.1);
+      border-radius: 8px;
+      color: #ededf0;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 0 12px;
+      outline: none;
+      transition: border-color 140ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .cmd-input:focus {
+      border-color: rgba(217, 43, 56, 0.65);
+    }
+    .cmd-input::placeholder { color: #6f6f78; }
+
+    .mic-btn {
+      width: 36px;
+      height: 36px;
+      background: #1e1e24;
+      color: #ededf0;
+      border: 1px solid rgba(237, 237, 240, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 140ms cubic-bezier(0.22, 1, 0.36, 1), border-color 140ms cubic-bezier(0.22, 1, 0.36, 1), color 140ms cubic-bezier(0.22, 1, 0.36, 1);
+      flex-shrink: 0;
+    }
+    .mic-btn:hover {
+      background: #25252c;
+      border-color: rgba(237, 237, 240, 0.2);
+    }
+    .mic-btn.recording {
+      background: #d92b38;
+      border-color: #d92b38;
+      color: #ffffff;
+    }
+
+    .run-btn {
+      height: 36px;
+      background: #d92b38;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 0 16px;
+      cursor: pointer;
+      transition: background-color 140ms cubic-bezier(0.22, 1, 0.36, 1), transform 140ms cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .run-btn:hover:not(:disabled) { background: #e53945; }
+    .run-btn:active:not(:disabled) { transform: scale(0.98); }
+    .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Live Voice Visualizer Strip */
+    .voice-strip {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      background: #0b0b0d;
+      border: 1px solid rgba(217, 43, 56, 0.35);
+      border-radius: 8px;
+    }
+    .voice-strip.active { display: flex; }
+
+    .voice-label {
+      font-size: 12px;
+      color: #ededf0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .voice-bars {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 18px;
+    }
+    .voice-bar {
+      width: 3px;
+      height: 16px;
+      background: #d92b38;
+      border-radius: 1.5px;
+      transform: scaleY(0.2);
+      transition: transform 60ms linear;
+    }
+
+    /* Quick action buttons */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .chip {
+      background: #1e1e24;
+      border: 1px solid rgba(237, 237, 240, 0.08);
+      color: #9e9ea7;
+      font-size: 12px;
+      font-weight: 400;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 140ms cubic-bezier(0.22, 1, 0.36, 1), color 140ms cubic-bezier(0.22, 1, 0.36, 1), border-color 140ms cubic-bezier(0.22, 1, 0.36, 1);
+      font-family: inherit;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip:hover {
+      background: #25252c;
+      border-color: rgba(237, 237, 240, 0.16);
+      color: #ededf0;
+    }
+
+    /* Response area */
+    .response {
+      font-size: 12px;
+      color: #ededf0;
+      padding: 8px 12px;
+      background: #0b0b0d;
+      border: 1px solid rgba(237, 237, 240, 0.08);
+      border-left: 2px solid #d92b38;
+      border-radius: 6px;
+      display: none;
+      line-height: 1.45;
+      max-height: 76px;
+      overflow-y: auto;
+    }
+    .response.show { display: block; }
+    .response.success { color: #4cc38a; border-left-color: #4cc38a; }
+    .response.error   { color: #e5484d; border-left-color: #e5484d; }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border: 1.5px solid rgba(237, 237, 240, 0.2);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 700ms linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <div class="popup-header">
+      <img src="assets/logo.png" class="mascot-mini" alt="Riu" />
+      <div class="header-text">
+        <div class="header-title">
+          Riu
+          <span class="live-tag"><span class="live-dot"></span>Gemini Live</span>
+        </div>
+        <div class="header-sub">Speak or type a command</div>
+      </div>
+      <button class="dashboard-btn" id="open-dashboard-btn" title="Open Dashboard">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="close-btn" id="close-btn" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="cmd-row">
+      <input
+        type="text"
+        class="cmd-input"
+        id="cmd-input"
+        placeholder="open chrome, clean temp, or ask Gemini Live"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="mic-btn" id="mic-btn" title="Start / Stop Live Voice">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <button class="run-btn" id="run-btn">Run</button>
+    </div>
+
+    <!-- Real-time reactive voice wave -->
+    <div class="voice-strip" id="voice-strip">
+      <span class="voice-label"><span class="live-dot"></span>Listening — click mic to send</span>
+      <div class="voice-bars" id="voice-bars">
+        <span class="voice-bar"></span><span class="voice-bar"></span><span class="voice-bar"></span>
+        <span class="voice-bar"></span><span class="voice-bar"></span><span class="voice-bar"></span>
+        <span class="voice-bar"></span><span class="voice-bar"></span><span class="voice-bar"></span>
+        <span class="voice-bar"></span>
+      </div>
+    </div>
+
+    <div class="chips" id="chips-row">
+      <span class="chip" data-cmd="open chrome">Open Chrome</span>
+      <span class="chip" data-cmd="open notepad">Open Notepad</span>
+      <span class="chip" data-cmd="clean temp">Clean Temp</span>
+      <span class="chip" data-cmd="empty bin">Empty Bin</span>
+      <span class="chip" data-cmd="organize downloads">Organize</span>
+      <span class="chip" data-cmd="lock screen">Lock</span>
+    </div>
+
+    <div class="response" id="response"></div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    const cmdInput   = document.getElementById('cmd-input');
+    const runBtn     = document.getElementById('run-btn');
+    const micBtn     = document.getElementById('mic-btn');
+    const closeBtn   = document.getElementById('close-btn');
+    const responseEl = document.getElementById('response');
+    const voiceStrip = document.getElementById('voice-strip');
+    const voiceBars  = Array.from(document.querySelectorAll('#voice-bars .voice-bar'));
+    const chipsRow   = document.getElementById('chips-row');
+    const chips      = document.querySelectorAll('.chip');
+
+    let isRecording   = false;
+    let mediaRecorder = null;
+    let audioChunks   = [];
+    let audioStream   = null;
+    let audioCtx      = null;
+    let rafId         = null;
+
+    window.addEventListener('load', () => {
+      setTimeout(() => cmdInput.focus(), 100);
+    });
+
+    closeBtn.addEventListener('click', () => {
+      stopRecordingCleanup();
+      ipcRenderer.send('command-popup:close');
+    });
+
+    document.getElementById('open-dashboard-btn')?.addEventListener('click', () => {
+      stopRecordingCleanup();
+      ipcRenderer.send('float-btn:open-main');
+      ipcRenderer.send('command-popup:close');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        stopRecordingCleanup();
+        ipcRenderer.send('command-popup:close');
+      }
+      if (e.key === 'Enter' && document.activeElement === cmdInput) executeCmd();
+    });
+
+    window.addEventListener('blur', () => {
+      if (isRecording) return; // Don't auto-close while recording voice
+      setTimeout(() => {
+        if (!document.hasFocus() && !isRecording) {
+          ipcRenderer.send('command-popup:close');
+        }
+      }, 250);
+    });
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        cmdInput.value = chip.dataset.cmd;
+        cmdInput.focus();
+        executeCmd();
+      });
+    });
+
+    runBtn.addEventListener('click', executeCmd);
+
+    // Listen to live streaming chunks from Gemini
+    ipcRenderer.on('ai:live-chunk', (_event, data) => {
+      if (data && data.text) {
+        showResponse(data.text);
+      }
+    });
+
+    function showResponse(msg, type = '') {
+      responseEl.className = 'response show ' + type;
+      responseEl.textContent = msg;
+    }
+
+    let currentAudioEl = null;
+    async function speakText(text) {
+      if (!text) return;
+      try {
+        if (currentAudioEl) {
+          currentAudioEl.pause();
+          currentAudioEl = null;
+        }
+        const tts = await ipcRenderer.invoke('ai:tts', text);
+        if (tts && tts.audioBase64) {
+          const audio = new Audio(`data:${tts.mimeType};base64,${tts.audioBase64}`);
+          currentAudioEl = audio;
+          await audio.play().catch(() => {});
+          return;
+        }
+      } catch (_) {}
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.rate = 1.02;
+          window.speechSynthesis.speak(utter);
+        } catch (_) {}
+      }
+    }
+
+    function stopRecordingCleanup() {
+      isRecording = false;
+      micBtn.classList.remove('recording');
+      voiceStrip.classList.remove('active');
+      chipsRow.style.display = 'flex';
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      if (audioCtx) { audioCtx.close().catch(() => {}); audioCtx = null; }
+      if (audioStream) {
+        audioStream.getTracks().forEach(t => t.stop());
+        audioStream = null;
+      }
+      voiceBars.forEach(b => { b.style.transform = 'scaleY(0.2)'; });
+    }
+
+    // Toggle Live Voice Microphone
+    micBtn.addEventListener('click', async () => {
+      if (isRecording && mediaRecorder) {
+        mediaRecorder.stop();
+        return;
+      }
+
+      try {
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        isRecording = true;
+
+        micBtn.classList.add('recording');
+        voiceStrip.classList.add('active');
+        chipsRow.style.display = 'none';
+
+        // Reactive audio waveform visualizer
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioCtx.createMediaStreamSource(audioStream);
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 32;
+        source.connect(analyser);
+        const dataArr = new Uint8Array(analyser.frequencyBinCount);
+
+        function drawWave() {
+          if (!isRecording) return;
+          analyser.getByteFrequencyData(dataArr);
+          voiceBars.forEach((bar, i) => {
+            const val = dataArr[i % dataArr.length] || 0;
+            const scale = Math.max(0.2, Math.min(1, val / 160));
+            bar.style.transform = `scaleY(${scale.toFixed(2)})`;
+          });
+          rafId = requestAnimationFrame(drawWave);
+        }
+        drawWave();
+
+        mediaRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm' });
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          stopRecordingCleanup();
+
+          if (blob.size < 500) {
+            showResponse('No audio captured', 'error');
+            return;
+          }
+
+          runBtn.disabled = true;
+          showResponse('Streaming to Gemini Live...');
+
+          try {
+            const arrayBuf = await blob.arrayBuffer();
+            const base64 = Buffer.from(arrayBuf).toString('base64');
+            const res = await ipcRenderer.invoke('ai:live-stream', {
+              audioBase64: base64,
+              audioMimeType: 'audio/webm',
+            });
+
+            if (res && res.text) {
+              showResponse(res.text, res.action ? 'success' : '');
+              speakText(res.text);
+            } else {
+              showResponse('Done', 'success');
+            }
+          } catch (err) {
+            showResponse(err.message || 'Live voice failed', 'error');
+          }
+          runBtn.disabled = false;
+        };
+
+        mediaRecorder.start();
+      } catch (err) {
+        stopRecordingCleanup();
+        showResponse('Microphone access denied or unavailable', 'error');
+      }
+    });
+
+    async function executeCmd() {
+      const text = cmdInput.value.trim();
+      if (!text) return;
+
+      runBtn.disabled = true;
+      runBtn.innerHTML = '<span class="spinner"></span>';
+      showResponse('Running...');
+
+      try {
+        const result = await ipcRenderer.invoke('float:execute-command', text);
+
+        if (result && result.action) {
+          showResponse(result.message || result.action, 'success');
+          if (!String(result.action).startsWith('launch:') && !String(result.action).startsWith('open:')) {
+            ipcRenderer.send('command-popup:navigate', result.action);
+          }
+        } else if (result && result.response) {
+          showResponse(result.response);
+        } else if (result && result.message) {
+          showResponse(result.message);
+        } else {
+          showResponse('Command executed', 'success');
+        }
+      } catch (err) {
+        showResponse(err.message || 'Command failed', 'error');
+      }
+
+      runBtn.disabled = false;
+      runBtn.textContent = 'Run';
+    }
+  </script>
+</body>
+</html>

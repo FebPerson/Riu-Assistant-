@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Custom Titlebar -->
+  <div class="titlebar" id="titlebar">
+    <div class="titlebar-left">
+      <img src="assets/logo.png" class="titlebar-logo" alt="Riu" />
+      <span class="titlebar-title">Riu</span>
+    </div>
+    <div class="titlebar-controls">
+      <button class="titlebar-btn btn-minimize" id="btn-minimize" title="Minimize" aria-label="Minimize">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <button class="titlebar-btn btn-maximize" id="btn-maximize" title="Maximize" aria-label="Maximize">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+      </button>
+      <button class="titlebar-btn btn-close" id="btn-close" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo.png" class="sidebar-logo" alt="Riu" />
+        <div class="sidebar-brand-text">
+          <div class="sidebar-brand-title">Riu</div>
+          <div class="sidebar-brand-tag">Desktop utility</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-section="dashboard" href="#">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a class="nav-item" data-section="organizer" href="#">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span class="nav-label">Smart Organizer</span>
+        </a>
+        <a class="nav-item" data-section="duplicates" href="#">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="nav-label">Duplicate Finder</span>
+        </a>
+        <a class="nav-item" data-section="disk" href="#">
+          <svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/></svg>
+          <span class="nav-label">Disk Analyzer</span>
+        </a>
+        <a class="nav-item" data-section="system" href="#">
+          <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span class="nav-label">System Health</span>
+        </a>
+        <a class="nav-item" data-section="settings" href="#">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="status-live"><span class="status-dot"></span>Ready</span>
+        <span class="sidebar-version">v1.0.0</span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <img src="assets/logo.png" class="section-bg-logo" alt="" aria-hidden="true" />
+      <div class="content-container">
+
+        <!-- ===== DASHBOARD ===== -->
+        <section class="content-section active" id="section-dashboard">
+          <div class="section-header">
+            <h1 class="section-title">Dashboard</h1>
+            <p class="section-subtitle">Local system commands, files, and hardware telemetry</p>
+          </div>
+
+          <!-- Command Bar -->
+          <div class="card command-card">
+            <div class="command-bar">
+              <div class="command-input-wrap">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                <input
+                  type="text"
+                  id="command-input"
+                  class="command-input"
+                  placeholder="Type a command or open an app"
+                  autocomplete="off"
+                />
+                <span class="command-shortcut"><kbd class="keycap">Enter</kbd></span>
+              </div>
+              <button class="btn-primary" id="btn-execute">Run</button>
+            </div>
+            <div id="command-response" class="command-response" style="display:none;"></div>
+          </div>
+
+          <!-- System Status Strip -->
+          <div class="metrics-row">
+            <div class="card metric-card" id="metric-cpu">
+              <div class="metric-header">
+                <div class="metric-label">CPU load</div>
+                <svg class="icon" style="color:var(--text-muted);" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+              </div>
+              <div class="metric-value" id="metric-cpu-val">—</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" id="progress-cpu" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="card metric-card" id="metric-ram">
+              <div class="metric-header">
+                <div class="metric-label">Memory</div>
+                <svg class="icon" style="color:var(--text-muted);" viewBox="0 0 24 24"><path d="M6 19v-3"/><path d="M10 19v-3"/><path d="M14 19v-3"/><path d="M18 19v-3"/><path d="M8 11V9"/><path d="M16 11V9"/><path d="M12 11V9"/><path d="M2 15h20"/><path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1.1a2 2 0 0 0 0 3.837V17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5.1a2 2 0 0 0 0-3.837Z"/></svg>
+              </div>
+              <div class="metric-value" id="metric-ram-val">—</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" id="progress-ram" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="card metric-card" id="metric-battery">
+              <div class="metric-header">
+                <div class="metric-label">Power</div>
+                <svg class="icon" style="color:var(--text-muted);" viewBox="0 0 24 24"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+              </div>
+              <div class="metric-value" id="metric-battery-val">—</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar progress-bar-battery" id="progress-battery" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <h2 class="card-title">Quick actions</h2>
+            <div class="quick-actions-grid">
+              <button class="quick-action-btn" id="qa-organize">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <span>Organize Downloads</span>
+              </button>
+              <button class="quick-action-btn" id="qa-duplicates">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Find Duplicates</span>
+              </button>
+              <button class="quick-action-btn" id="qa-cleantemp">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Clean Temp</span>
+              </button>
+              <button class="quick-action-btn" id="qa-emptybin">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/></svg>
+                <span>Empty Bin</span>
+              </button>
+              <button class="quick-action-btn" id="qa-lock">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span>Lock Screen</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="card">
+            <h2 class="card-title">Recent activity</h2>
+            <ul class="activity-feed" id="activity-feed">
+              <li class="activity-item activity-empty">No recent activity</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ===== SMART ORGANIZER ===== -->
+        <section class="content-section" id="section-organizer">
+          <div class="section-header">
+            <h1 class="section-title">Smart Organizer</h1>
+            <p class="section-subtitle">Sort folder contents by file type with one-click undo</p>
+          </div>
+
+          <div class="card">
+            <div class="folder-picker-row">
+              <input
+                type="text"
+                id="organizer-folder-input"
+                class="form-input flex-grow"
+                placeholder="Select or enter folder path"
+              />
+              <button class="btn-secondary" id="organizer-browse-btn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Browse
+              </button>
+              <select class="form-select" id="organizer-preset-select" style="width:160px;">
+                <option value="">Preset folders</option>
+                <option value="downloads">Downloads</option>
+                <option value="desktop">Desktop</option>
+              </select>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" id="organizer-scan-btn">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Scan &amp; Preview
+              </button>
+              <button class="btn-secondary" id="organizer-execute-btn" disabled>
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Organize Now
+              </button>
+              <button class="btn-ghost" id="organizer-undo-btn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+                Undo Last
+              </button>
+            </div>
+            <div id="organizer-status" class="status-message"></div>
+          </div>
+
+          <div class="card" id="organizer-preview-card" style="display:none;">
+            <h2 class="card-title">Proposed moves</h2>
+            <div class="table-wrap">
+              <table class="data-table" id="organizer-table">
+                <thead>
+                  <tr>
+                    <th>File</th>
+                    <th>Current location</th>
+                    <th>Destination</th>
+                    <th>Category</th>
+                    <th>Size</th>
+                  </tr>
+                </thead>
+                <tbody id="organizer-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== DUPLICATE FINDER ===== -->
+        <section class="content-section" id="section-duplicates">
+          <div class="section-header">
+            <h1 class="section-title">Duplicate Finder</h1>
+            <p class="section-subtitle">Locate identical files by size and MD5 hash</p>
+          </div>
+
+          <div class="card">
+            <div class="folder-picker-row">
+              <input
+                type="text"
+                id="duplicates-folder-input"
+                class="form-input flex-grow"
+                placeholder="Select folder to scan"
+              />
+              <button class="btn-secondary" id="duplicates-browse-btn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Browse
+              </button>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" id="duplicates-scan-btn">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Scan for Duplicates
+              </button>
+              <button class="btn-secondary" id="duplicates-selectall-btn" disabled>
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Select All (Keep Newest)
+              </button>
+              <button class="btn-danger" id="duplicates-delete-btn" disabled>
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Move to Recycle Bin
+              </button>
+            </div>
+            <div id="duplicates-savings" class="savings-display" style="display:none;">
+              <span class="savings-label">Reclaimable space</span>
+              <span class="savings-value" id="duplicates-savings-val">0 MB</span>
+            </div>
+          </div>
+
+          <div id="duplicates-results" class="duplicates-results"></div>
+        </section>
+
+        <!-- ===== DISK ANALYZER ===== -->
+        <section class="content-section" id="section-disk">
+          <div class="section-header">
+            <h1 class="section-title">Disk Analyzer</h1>
+            <p class="section-subtitle">Inspect drive capacity and largest files</p>
+          </div>
+
+          <div class="card">
+            <div class="btn-row" style="justify-content:space-between;align-items:center;">
+              <h2 class="card-title" style="margin-bottom:0;">Logical drives</h2>
+              <button class="btn-secondary btn-sm" id="disk-refresh-btn">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Refresh
+              </button>
+            </div>
+            <div class="drives-row" id="drives-row">
+              <div class="drives-empty">Click Refresh to load drive info</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">Largest files</h2>
+            <div class="folder-picker-row">
+              <input
+                type="text"
+                id="disk-folder-input"
+                class="form-input flex-grow"
+                placeholder="Select folder to scan"
+              />
+              <button class="btn-secondary" id="disk-browse-btn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Browse
+              </button>
+              <button class="btn-primary" id="disk-scan-btn">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Scan
+              </button>
+            </div>
+            <div class="table-wrap" id="disk-results-wrap" style="display:none;">
+              <table class="data-table" id="disk-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Filename</th>
+                    <th>Path</th>
+                    <th>Size</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="disk-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SYSTEM HEALTH ===== -->
+        <section class="content-section" id="section-system">
+          <div class="section-header">
+            <h1 class="section-title">System Health</h1>
+            <p class="section-subtitle">Live hardware metrics, temp cleanup, and quick tools</p>
+          </div>
+
+          <!-- Live Meters -->
+          <div class="metrics-row">
+            <div class="card metric-card-lg" id="sys-cpu-card">
+              <div class="metric-header">
+                <div class="metric-label">CPU load</div>
+              </div>
+              <div class="metric-value-lg" id="sys-cpu-val">—</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" id="sys-progress-cpu" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="card metric-card-lg" id="sys-ram-card">
+              <div class="metric-header">
+                <div class="metric-label">Memory</div>
+              </div>
+              <div class="metric-value-lg" id="sys-ram-val">—</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" id="sys-progress-ram" style="width:0%"></div>
+              </div>
+              <div class="metric-sub" id="sys-ram-sub"></div>
+            </div>
+            <div class="card metric-card-lg" id="sys-battery-card">
+              <div class="metric-header">
+                <div class="metric-label">Power</div>
+              </div>
+              <div class="metric-value-lg" id="sys-battery-val">—</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar progress-bar-battery" id="sys-progress-battery" style="width:0%"></div>
+              </div>
+              <div class="metric-sub" id="sys-battery-sub"></div>
+            </div>
+          </div>
+
+          <!-- Quick Tools -->
+          <div class="card">
+            <h2 class="card-title">System tools</h2>
+            <div class="quick-tools-grid">
+              <button class="tool-btn" id="sys-cleantemp-btn">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Clean Temp</span>
+              </button>
+              <button class="tool-btn" id="sys-emptybin-btn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/></svg>
+                <span>Empty Recycle Bin</span>
+              </button>
+              <button class="tool-btn" id="sys-lock-btn">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span>Lock Workstation</span>
+              </button>
+              <button class="tool-btn" id="sys-volup-btn">
+                <svg class="icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                <span>Volume Up</span>
+              </button>
+              <button class="tool-btn" id="sys-voldown-btn">
+                <svg class="icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <span>Volume Down</span>
+              </button>
+              <button class="tool-btn" id="sys-volmute-btn">
+                <svg class="icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <span>Mute</span>
+              </button>
+            </div>
+            <div id="sys-temp-results" class="status-message" style="margin-top:12px;"></div>
+          </div>
+
+          <!-- App Launcher -->
+          <div class="card">
+            <h2 class="card-title">App launcher</h2>
+            <div class="app-launcher-grid">
+              <button class="app-launcher-card" data-app="notepad">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span class="app-name">Notepad</span>
+              </button>
+              <button class="app-launcher-card" data-app="calculator">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+                <span class="app-name">Calculator</span>
+              </button>
+              <button class="app-launcher-card" data-app="explorer">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <span class="app-name">Explorer</span>
+              </button>
+              <button class="app-launcher-card" data-app="cmd">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                <span class="app-name">Terminal</span>
+              </button>
+              <button class="app-launcher-card" data-app="chrome">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+                <span class="app-name">Chrome</span>
+              </button>
+              <button class="app-launcher-card" data-app="vscode">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span class="app-name">VS Code</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SETTINGS ===== -->
+        <section class="content-section" id="section-settings">
+          <div class="section-header">
+            <h1 class="section-title">Settings</h1>
+            <p class="section-subtitle">API keys and application details</p>
+          </div>
+
+          <!-- Gemini API Key (.env Import) -->
+          <div class="card settings-card">
+            <h2 class="card-title">Gemini API key (.env)</h2>
+            <p class="settings-desc">Import a <code style="font-family:var(--font-mono);color:var(--text-primary);">.env</code> file containing <code style="font-family:var(--font-mono);color:var(--text-primary);">GEMINI_API_KEY</code> so credentials never live inside the app source. Get a key at <a href="#" class="link">aistudio.google.com</a></p>
+            <div class="api-key-row" style="justify-content:space-between;padding:10px 12px;background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius-sm);">
+              <span id="gemini-env-status" class="status-message" style="padding:0;min-height:auto;">Checking .env status…</span>
+              <span id="gemini-env-masked" style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);"></span>
+            </div>
+            <div class="btn-row" style="margin-bottom:0;">
+              <button class="btn-primary" id="gemini-env-upload-btn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload .env file
+              </button>
+              <button class="btn-ghost" id="gemini-env-clear-btn" style="display:none;">Remove uploaded .env</button>
+            </div>
+          </div>
+
+          <!-- Claude API Key -->
+          <div class="card settings-card">
+            <h2 class="card-title">Claude API key</h2>
+            <p class="settings-desc">Optional Anthropic Claude key for fallback queries.</p>
+            <div class="api-key-row">
+              <input
+                type="password"
+                id="claude-key-input"
+                class="form-input flex-grow"
+                placeholder="Enter Claude API key"
+                autocomplete="off"
+              />
+              <button class="btn-ghost show-hide-btn" data-target="claude-key-input" title="Toggle visibility">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <button class="btn-primary" id="claude-save-btn">Save Claude Key</button>
+          </div>
+
+          <!-- App Info -->
+          <div class="card settings-card">
+            <h2 class="card-title">About Riu</h2>
+            <div class="about-grid">
+              <div class="about-row"><span class="about-label">Version</span><span class="about-val">1.0.0</span></div>
+              <div class="about-row"><span class="about-label">Platform</span><span class="about-val">Windows</span></div>
+              <div class="about-row"><span class="about-label">Runtime</span><span class="about-val">Electron + Node.js</span></div>
+              <div class="about-row"><span class="about-label">AI fallback</span><span class="about-val">Gemini / Claude</span></div>
+            </div>
+            <p class="about-desc">Windows desktop utility for file organization, duplicate removal, disk inspection, and quick system commands.</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display:none;">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <div class="loading-message" id="loading-message">Loading</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
