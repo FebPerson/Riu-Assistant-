@@ -1,0 +1,6 @@
+first download all files and then install node.js 
+then on the project directory open cmd and run npm install
+after the node.js packages install run command npm start 
+electron will automaticly starts and you will go with it.
+
+Developers Finn & Yash.
